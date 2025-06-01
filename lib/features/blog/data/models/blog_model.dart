@@ -59,4 +59,18 @@ class BlogModel extends Blog {
       posterName: posterName ?? this.posterName,
     );
   }
+
+  factory BlogModel.fromEntity(Blog blog) {
+  return BlogModel(
+    id: blog.id,
+    posterId: blog.posterId,
+    title: blog.title,
+    content: blog.content,
+    imageUrl: blog.imageUrl,
+    topics: blog.topics,
+    updatedAt: blog.updatedAt,
+    posterName: blog.posterName,
+  );
+}
+
 }

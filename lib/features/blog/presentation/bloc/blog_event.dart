@@ -14,3 +14,13 @@ final class BlogUpload extends BlogEvent {
 }
 
 final class BlogFetchAllBlogs extends BlogEvent{}
+
+class BlogUpdate extends BlogEvent {
+  final Blog blog;
+   BlogUpdate({required this.blog});
+}
+
+class BlogDelete extends BlogEvent {
+  final String id;
+   BlogDelete({required this.id});
+}

@@ -60,4 +60,31 @@ class BlogRepositoryImpl implements BlogRepository {
     return left(Failure(e.message));
    }
   }
+
+  @override
+Future<Either<Failure, Blog>> updateBlog(Blog blog) async {
+  try {
+    if (!await connectionChecker.isConnected) {
+      return left(Failure("No Internet Connection"));
+    }
+    final updatedBlog = await blogRemoteDataSource.updateBlog(blog);
+    return right(updatedBlog);
+  } on ServerException catch (e) {
+    return left(Failure(e.message));
+  }
+}
+
+@override
+Future<Either<Failure, void>> deleteBlog(String blogId) async {
+  try {
+    if (!await connectionChecker.isConnected) {
+      return left(Failure("No Internet Connection"));
+    }
+    await blogRemoteDataSource.deleteBlog(blogId);
+    return right(null);
+  } on ServerException catch (e) {
+    return left(Failure(e.message));
+  }
+}
+
 }
