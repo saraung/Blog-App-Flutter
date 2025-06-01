@@ -1,12 +1,11 @@
 import 'package:blog_app/core/common/cubits/app_user/app_user_cubit.dart';
-import 'package:blog_app/features/blog/domain/entities/blog.dart';
 import 'package:blog_app/features/blog/presentation/bloc/blog_bloc.dart';
 import 'package:blog_app/features/blog/presentation/pages/blog_viewer_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class MyBlogPage extends StatefulWidget {
-  static route() => MaterialPageRoute(builder: (context) => MyBlogPage());
+  static route() => MaterialPageRoute(builder: (context) => const MyBlogPage());
   const MyBlogPage({super.key});
 
   @override
@@ -82,12 +81,12 @@ class _MyBlogPageState extends State<MyBlogPage> {
                         trailing: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            IconButton(
-                              icon: const Icon(Icons.edit, color: Colors.blue),
-                              onPressed: () {
-                                // TODO: Implement update functionality
-                              },
-                            ),
+                            // IconButton(
+                            //   icon: const Icon(Icons.edit, color: Colors.blue),
+                            //   onPressed: () {
+                        
+                            //   },
+                            // ),
                             IconButton(
                               icon: const Icon(Icons.delete, color: Colors.red),
                               onPressed: () => _deleteBlog(blog.id),

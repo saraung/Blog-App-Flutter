@@ -6,12 +6,12 @@ plugins {
 
 android {
     namespace "com.example.blog_app" // ← Change this if your package name is different
-    compileSdk 35 // or use flutter.compileSdkVersion if set elsewhere
+    compileSdk 34 // or use flutter.compileSdkVersion if set elsewhere
 
     defaultConfig {
         applicationId "com.example.blog_app" // ← Change this if your app ID is different
         minSdk 23
-        targetSdk 35
+        targetSdk 34
         versionCode 1
         versionName "1.0"
     }
