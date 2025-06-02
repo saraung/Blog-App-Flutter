@@ -36,6 +36,7 @@ Future<void> initDependencies() async {
 
   serviceLocator.registerLazySingleton(() => Hive.box(name: 'blogs'));
 
+
   serviceLocator.registerLazySingleton(() => supabase.client);
   serviceLocator.registerLazySingleton(() => AppUserCubit());
   serviceLocator.registerFactory(() => InternetConnection());

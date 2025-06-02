@@ -1,11 +1,12 @@
 import 'package:blog_app/core/common/widgets/loader.dart';
+import 'package:blog_app/core/constants/constants.dart';
 import 'package:blog_app/core/theme/app_pallete.dart';
 import 'package:blog_app/core/utils/show_snackbar.dart';
+import 'package:blog_app/features/blog/domain/entities/blog.dart';
 import 'package:blog_app/features/blog/presentation/bloc/blog_bloc.dart';
 import 'package:blog_app/features/blog/presentation/pages/add_new_blog_page.dart';
 import 'package:blog_app/features/blog/presentation/widgets/blog_card.dart';
-import 'package:blog_app/features/blog/presentation/widgets/blog_drawer.dart'; // 👈 Import your drawer here
-
+import 'package:blog_app/features/blog/presentation/widgets/blog_drawer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -18,19 +19,28 @@ class BlogPage extends StatefulWidget {
   State<BlogPage> createState() => _BlogPageState();
 }
 
-class _BlogPageState extends State<BlogPage> {
+class _BlogPageState extends State<BlogPage> with TickerProviderStateMixin {
+  late TabController _tabController;
+
   @override
   void initState() {
     super.initState();
+    _tabController =
+        TabController(length: Constants.topics.length + 1, vsync: this);
     context.read<BlogBloc>().add(BlogFetchAllBlogs());
+  }
+
+  List<Blog> _filterBlogs(List<Blog> blogs, String topic) {
+    if (topic == 'Trending') return blogs;
+    return blogs.where((blog) => blog.topics.contains(topic)).toList();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      // 👇 Attach your custom drawer here
-      drawer: const BlogDrawer(),
+    final tabLabels = ['Trending', ...Constants.topics];
 
+    return Scaffold(
+      drawer: const BlogDrawer(),
       appBar: AppBar(
         leading: Builder(
           builder: (context) => IconButton(
@@ -40,7 +50,7 @@ class _BlogPageState extends State<BlogPage> {
             },
           ),
         ),
-        title: const Center(child: Text("Blog App")),
+        title: const Center(child: Text("Blogsy")),
         actions: [
           IconButton(
             onPressed: () {
@@ -49,8 +59,12 @@ class _BlogPageState extends State<BlogPage> {
             icon: const Icon(CupertinoIcons.add_circled),
           ),
         ],
+        bottom: TabBar(
+          isScrollable: true,
+          controller: _tabController,
+          tabs: tabLabels.map((e) => Tab(text: e)).toList(),
+        ),
       ),
-
       body: BlocConsumer<BlogBloc, BlogState>(
         listener: (context, state) {
           if (state is BlogFailure) {
@@ -62,17 +76,25 @@ class _BlogPageState extends State<BlogPage> {
             return const Loader();
           }
           if (state is BlogDisplaySuccess) {
-            return ListView.builder(
-              itemCount: state.blogs.length,
-              itemBuilder: (context, index) {
-                final blog = state.blogs[index];
-                return BlogCard(
-                  blog: blog,
-                  color: index % 3 == 0
-                      ? AppPallete.gradient1
-                      : AppPallete.gradient2,
+            return TabBarView(
+              controller: _tabController,
+              children: tabLabels.map((topic) {
+                final blogs = _filterBlogs(state.blogs, topic);
+                if (blogs.isEmpty) {
+                  return const Center(child: Text("No blogs found."));
+                }
+                return ListView.builder(
+                  itemCount: blogs.length,
+                  itemBuilder: (context, index) {
+                    return BlogCard(
+                      blog: blogs[index],
+                      color: index % 2 == 0
+                          ? AppPallete.gradient1
+                          : AppPallete.gradient2,
+                    );
+                  },
                 );
-              },
+              }).toList(),
             );
           }
           return const SizedBox();
