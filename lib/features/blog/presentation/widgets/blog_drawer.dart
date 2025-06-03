@@ -43,6 +43,11 @@ class BlogDrawer extends StatelessWidget {
     final appUserState = context.watch<AppUserCubit>().state;
     final user = appUserState is AppUserLoggedIn ? appUserState.user : null;
 
+    final String userName = user?.name ?? '';
+    final String userEmail = user?.email ?? '';
+    final String profileInitial =
+        userName.isNotEmpty ? userName[0].toUpperCase() : '?';
+
     return Drawer(
       child: Column(
         children: [
@@ -52,12 +57,12 @@ class BlogDrawer extends StatelessWidget {
                 colors: [AppPallete.gradient1, AppPallete.gradient2],
               ),
             ),
-            accountName: Text(user?.name ?? 'Guest'),
-            accountEmail: Text(user?.email ?? ''),
+            accountName: Text(userName.isNotEmpty ? userName : 'Guest'),
+            accountEmail: Text(userEmail),
             currentAccountPicture: CircleAvatar(
               backgroundColor: AppPallete.gradient2,
               child: Text(
-                user?.name.substring(0, 1).toUpperCase() ?? "?",
+                profileInitial,
                 style: const TextStyle(fontSize: 24, color: Colors.black),
               ),
             ),

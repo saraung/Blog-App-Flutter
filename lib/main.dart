@@ -1,3 +1,4 @@
+import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:blog_app/core/common/cubits/app_user/app_user_cubit.dart';
 import 'package:blog_app/core/theme/theme.dart';
 import 'package:blog_app/features/auth/presentation/bloc/auth_bloc.dart';
@@ -42,16 +43,22 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
       title: 'Blog App',
       theme: AppTheme.darkThemeMode,
-      home: BlocSelector<AppUserCubit, AppUserState, bool>(
-        selector: (state) {
-          return state is AppUserLoggedIn;
-        },
-        builder: (context, isLoggedIn) {
-          if (isLoggedIn) {
-            return const BlogPage();
-          }
-          return const LoginPage();
-        },
+      home: AnimatedSplashScreen(
+        duration: 2000,
+        splash: Image.asset(
+          'assets/icons/blogsy.png',
+          height: 300, // adjust these
+          width: 300,
+          fit: BoxFit.contain, // makes it scale nicely
+        ),
+        splashTransition: SplashTransition.fadeTransition,
+        backgroundColor: const Color(0xFF1D2024),
+        nextScreen: BlocSelector<AppUserCubit, AppUserState, bool>(
+          selector: (state) => state is AppUserLoggedIn,
+          builder: (context, isLoggedIn) {
+            return isLoggedIn ? const BlogPage() : const LoginPage();
+          },
+        ),
       ),
     );
   }
